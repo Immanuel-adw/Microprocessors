@@ -1,0 +1,252 @@
+
+
+Microchip MPLAB XC8 Assembler V2.31 build 20201012212115 
+                                                                                                           Mon Mar  8 10:07:22 2021
+
+
+     1                           	processor	18F87K22
+     2                           	pagewidth 132
+     3                           	psect	udata_acs,global,class=COMRAM,space=1,delta=1,lowdata,noexec
+     4                           	psect	udata_bank0,global,class=BANK0,space=1,delta=1,lowdata,noexec
+     5                           	psect	udata_bank1,global,class=BANK1,space=1,delta=1,lowdata,noexec
+     6                           	psect	udata_bank2,global,class=BANK2,space=1,delta=1,lowdata,noexec
+     7                           	psect	udata_bank3,global,class=BANK3,space=1,delta=1,lowdata,noexec
+     8                           	psect	udata_bank4,global,class=BANK4,space=1,delta=1,lowdata,noexec
+     9                           	psect	udata_bank5,global,class=BANK5,space=1,delta=1,lowdata,noexec
+    10                           	psect	udata_bank6,global,class=BANK6,space=1,delta=1,lowdata,noexec
+    11                           	psect	udata_bank7,global,class=BANK7,space=1,delta=1,lowdata,noexec
+    12                           	psect	udata_bank8,global,class=BANK8,space=1,delta=1,lowdata,noexec
+    13                           	psect	udata_bank9,global,class=BANK9,space=1,delta=1,lowdata,noexec
+    14                           	psect	udata_bank10,global,class=BANK10,space=1,delta=1,lowdata,noexec
+    15                           	psect	udata_bank11,global,class=BANK11,space=1,delta=1,lowdata,noexec
+    16                           	psect	udata_bank12,global,class=BANK12,space=1,delta=1,lowdata,noexec
+    17                           	psect	udata_bank13,global,class=BANK13,space=1,delta=1,lowdata,noexec
+    18                           	psect	udata_bank14,global,class=BANK14,space=1,delta=1,lowdata,noexec
+    19                           	psect	udata_bank15,global,class=BANK15,space=1,delta=1,lowdata,noexec
+    20                           	psect	udata,global,class=RAM,space=1,delta=1,noexec
+    21                           	psect	code,global,reloc=2,class=CODE,delta=1
+    22                           	psect	data,global,reloc=2,class=CONST,delta=1,noexec
+    23                           	psect	edata,global,class=EEDATA,space=3,delta=2,noexec
+    24                           	psect	config,global,abs,ovrld,class=CONFIG,space=4,delta=1,noexec
+    25                           
+    26                           ; PIC18F87K22 Configuration Bit Settings
+    27                           ; Assembly source line config statements
+    28  0000                     
+    29                           	psect	edata
+    30  0000                     stk_offset	set	0
+    31  0000                     auto_size	set	0
+    32                           
+    33                           ; stack_auto defines a symbol /name/_offset which equates to the
+    34                           ; stack offset of the auto object in question
+    35  000000                     
+    36                           ; stack_param defines a symbol /name/_offset which equates to the
+    37                           ; stack offset of the parameter object in question
+    38  000000                     
+    39                           ; alloc_stack adjusts the SP to allocate space for auto objects
+    40                           ; it also links in to the btemp symbol so that can be used
+    41  000000                     
+    42                           ; restore_stack adjusts the SP to remove all auto and parameter
+    43                           ; objects from the stack prior to returning from a function
+    44  000000                     
+    45                           	psect	config
+    46                           
+    47                           ;Config register CONFIG1L @ 0x300000
+    48                           ;	VREG Sleep Enable bit
+    49                           ;	RETEN = ON, Enabled
+    50                           ;	LF-INTOSC Low-power Enable bit
+    51                           ;	INTOSCSEL = HIGH, LF-INTOSC in High-power mode during Sleep
+    52                           ;	SOSC Power Selection and mode Configuration bits
+    53                           ;	SOSCSEL = DIG, Digital (SCLKI) mode
+    54                           ;	Extended Instruction Set
+    55                           ;	XINST = OFF, Disabled
+    56  300000                     	org	3145728
+    57  300000  15                 	db	21
+    58                           
+    59                           ;Config register CONFIG1H @ 0x300001
+    60                           ;	Oscillator
+    61                           ;	FOSC = HS1, HS oscillator (Medium power, 4 MHz - 16 MHz)
+    62                           ;	PLL x4 Enable bit
+    63                           ;	PLLCFG = ON, Enabled
+    64                           ;	Fail-Safe Clock Monitor
+    65                           ;	FCMEN = OFF, Disabled
+    66                           ;	Internal External Oscillator Switch Over Mode
+    67                           ;	IESO = OFF, Disabled
+    68  300001                     	org	3145729
+    69  300001  13                 	db	19
+    70                           
+    71                           ;Config register CONFIG2L @ 0x300002
+    72                           ;	Power Up Timer
+    73                           ;	PWRTEN = OFF, Disabled
+    74                           ;	Brown Out Detect
+    75                           ;	BOREN = SBORDIS, Enabled in hardware, SBOREN disabled
+    76                           ;	Brown-out Reset Voltage bits
+    77                           ;	BORV = 0x3, user specified literal
+    78                           ;	BORMV Power level
+    79                           ;	BORPWR = ZPBORMV, ZPBORMV instead of BORMV is selected
+    80  300002                     	org	3145730
+    81  300002  7F                 	db	127
+    82                           
+    83                           ;Config register CONFIG2H @ 0x300003
+    84                           ;	Watchdog Timer
+    85                           ;	WDTEN = OFF, WDT disabled in hardware; SWDTEN bit disabled
+    86                           ;	Watchdog Postscaler
+    87                           ;	WDTPS = 0x100000, user specified literal
+    88  300003                     	org	3145731
+    89  300003  00                 	db	4194304
+    90                           
+    91                           ;Config register CONFIG3L @ 0x300004
+    92                           ;	RTCC Clock Select
+    93                           ;	RTCOSC = SOSCREF, RTCC uses SOSC
+    94                           ;	External Address Shift bit
+    95                           ;	EASHFT = ON, Address Shifting enabled
+    96                           ;	Address Bus Width Select bits
+    97                           ;	ABW = MM, 8-bit address bus
+    98                           ;	Data Bus Width
+    99                           ;	BW = 0x10, user specified literal
+   100                           ;	External Bus Wait
+   101                           ;	WAIT = OFF, Disabled
+   102  300004                     	org	3145732
+   103  300004  B9                 	db	1209
+   104                           
+   105                           ;Config register CONFIG3H @ 0x300005
+   106                           ;	CCP2 Mux
+   107                           ;	CCP2MX = PORTC, RC1
+   108                           ;	ECCP Mux
+   109                           ;	ECCPMX = PORTE, Enhanced CCP1/3 [P1B/P1C/P3B/P3C] muxed with RE6/RE5/RE4/RE3
+   110                           ;	MSSP address masking
+   111                           ;	MSSPMSK = 0x1, user specified literal
+   112                           ;	Master Clear Enable
+   113                           ;	MCLRE = ON, MCLR Enabled, RG5 Disabled
+   114  300005                     	org	3145733
+   115  300005  8B                 	db	139
+   116                           
+   117                           ;Config register CONFIG4L @ 0x300006
+   118                           ;	Stack Overflow Reset
+   119                           ;	STVREN = ON, Enabled
+   120                           ;	Boot Block Size
+   121                           ;	BBSIZ = BB2K, 2K word Boot Block size
+   122                           ;	Background Debug
+   123                           ;	DEBUG = 0x1, unprogrammed default
+   124  300006                     	org	3145734
+   125  300006  91                 	db	145
+   126                           
+   127                           ;Config register CONFIG5L @ 0x300008
+   128                           ;	Code Protect 00800-03FFF
+   129                           ;	CP0 = OFF, Disabled
+   130                           ;	Code Protect 04000-07FFF
+   131                           ;	CP1 = OFF, Disabled
+   132                           ;	Code Protect 08000-0BFFF
+   133                           ;	CP2 = OFF, Disabled
+   134                           ;	Code Protect 0C000-0FFFF
+   135                           ;	CP3 = OFF, Disabled
+   136                           ;	Code Protect 10000-13FFF
+   137                           ;	CP4 = OFF, Disabled
+   138                           ;	Code Protect 14000-17FFF
+   139                           ;	CP5 = OFF, Disabled
+   140                           ;	Code Protect 18000-1BFFF
+   141                           ;	CP6 = OFF, Disabled
+   142                           ;	Code Protect 1C000-1FFFF
+   143                           ;	CP7 = OFF, Disabled
+   144  300008                     	org	3145736
+   145  300008  FF                 	db	255
+   146                           
+   147                           ;Config register CONFIG5H @ 0x300009
+   148                           ;	Code Protect Boot
+   149                           ;	CPB = OFF, Disabled
+   150                           ;	Data EE Read Protect
+   151                           ;	CPD = OFF, Disabled
+   152  300009                     	org	3145737
+   153  300009  C0                 	db	192
+   154                           
+   155                           ;Config register CONFIG6L @ 0x30000A
+   156                           ;	Table Write Protect 00800-03FFF
+   157                           ;	WRT0 = OFF, Disabled
+   158                           ;	Table Write Protect 04000-07FFF
+   159                           ;	WRT1 = OFF, Disabled
+   160                           ;	Table Write Protect 08000-0BFFF
+   161                           ;	WRT2 = OFF, Disabled
+   162                           ;	Table Write Protect 0C000-0FFFF
+   163                           ;	WRT3 = OFF, Disabled
+   164                           ;	Table Write Protect 10000-13FFF
+   165                           ;	WRT4 = OFF, Disabled
+   166                           ;	Table Write Protect 14000-17FFF
+   167                           ;	WRT5 = OFF, Disabled
+   168                           ;	Table Write Protect 18000-1BFFF
+   169                           ;	WRT6 = OFF, Disabled
+   170                           ;	Table Write Protect 1C000-1FFFF
+   171                           ;	WRT7 = OFF, Disabled
+   172  30000A                     	org	3145738
+   173  30000A  FF                 	db	255
+   174                           
+   175                           ;Config register CONFIG6H @ 0x30000B
+   176                           ;	Config. Write Protect
+   177                           ;	WRTC = OFF, Disabled
+   178                           ;	Table Write Protect Boot
+   179                           ;	WRTB = OFF, Disabled
+   180                           ;	Data EE Write Protect
+   181                           ;	WRTD = OFF, Disabled
+   182  30000B                     	org	3145739
+   183  30000B  E0                 	db	224
+   184                           
+   185                           ;Config register CONFIG7L @ 0x30000C
+   186                           ;	Table Read Protect 00800-03FFF
+   187                           ;	EBRT0 = OFF, Disabled
+   188                           ;	Table Read Protect 04000-07FFF
+   189                           ;	EBRT1 = OFF, Disabled
+   190                           ;	Table Read Protect 08000-0BFFF
+   191                           ;	EBRT2 = OFF, Disabled
+   192                           ;	Table Read Protect 0C000-0FFFF
+   193                           ;	EBRT3 = OFF, Disabled
+   194                           ;	Table Read Protect 10000-13FFF
+   195                           ;	EBRT4 = OFF, Disabled
+   196                           ;	Table Read Protect 14000-17FFF
+   197                           ;	EBRT5 = OFF, Disabled
+   198                           ;	Table Read Protect 18000-1BFFF
+   199                           ;	EBRT6 = OFF, Disabled
+   200                           ;	Table Read Protect 1C000-1FFFF
+   201                           ;	EBRT7 = OFF, Disabled
+   202  30000C                     	org	3145740
+   203  30000C  FF                 	db	255
+   204                           
+   205                           ;Config register CONFIG7H @ 0x30000D
+   206                           ;	Table Read Protect Boot
+   207                           ;	EBRTB = OFF, Disabled
+   208  30000D                     	org	3145741
+   209  30000D  40                 	db	64
+   210                           tosu	equ	0xFFF
+   211                           tosh	equ	0xFFE
+   212                           tosl	equ	0xFFD
+   213                           stkptr	equ	0xFFC
+   214                           pclatu	equ	0xFFB
+   215                           pclath	equ	0xFFA
+   216                           pcl	equ	0xFF9
+   217                           tblptru	equ	0xFF8
+   218                           tblptrh	equ	0xFF7
+   219                           tblptrl	equ	0xFF6
+   220                           tablat	equ	0xFF5
+   221                           prodh	equ	0xFF4
+   222                           prodl	equ	0xFF3
+   223                           indf0	equ	0xFEF
+   224                           postinc0	equ	0xFEE
+   225                           postdec0	equ	0xFED
+   226                           preinc0	equ	0xFEC
+   227                           plusw0	equ	0xFEB
+   228                           fsr0h	equ	0xFEA
+   229                           fsr0l	equ	0xFE9
+   230                           wreg	equ	0xFE8
+   231                           indf1	equ	0xFE7
+   232                           postinc1	equ	0xFE6
+   233                           postdec1	equ	0xFE5
+   234                           preinc1	equ	0xFE4
+   235                           plusw1	equ	0xFE3
+   236                           fsr1h	equ	0xFE2
+   237                           fsr1l	equ	0xFE1
+   238                           bsr	equ	0xFE0
+   239                           indf2	equ	0xFDF
+   240                           postinc2	equ	0xFDE
+   241                           postdec2	equ	0xFDD
+   242                           preinc2	equ	0xFDC
+   243                           plusw2	equ	0xFDB
+   244                           fsr2h	equ	0xFDA
+   245                           fsr2l	equ	0xFD9
+   246                           status	equ	0xFD8

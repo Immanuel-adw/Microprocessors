@@ -1,0 +1,111 @@
+
+
+Microchip MPLAB XC8 Assembler V2.31 build 20201012212115 
+                                                                                                           Mon Mar  8 10:07:18 2021
+
+
+     1                           	processor	18F87K22
+     2                           	pagewidth 132
+     3                           	psect	udata_acs,global,class=COMRAM,space=1,delta=1,lowdata,noexec
+     4                           	psect	udata_bank0,global,class=BANK0,space=1,delta=1,lowdata,noexec
+     5                           	psect	udata_bank1,global,class=BANK1,space=1,delta=1,lowdata,noexec
+     6                           	psect	udata_bank2,global,class=BANK2,space=1,delta=1,lowdata,noexec
+     7                           	psect	udata_bank3,global,class=BANK3,space=1,delta=1,lowdata,noexec
+     8                           	psect	udata_bank4,global,class=BANK4,space=1,delta=1,lowdata,noexec
+     9                           	psect	udata_bank5,global,class=BANK5,space=1,delta=1,lowdata,noexec
+    10                           	psect	udata_bank6,global,class=BANK6,space=1,delta=1,lowdata,noexec
+    11                           	psect	udata_bank7,global,class=BANK7,space=1,delta=1,lowdata,noexec
+    12                           	psect	udata_bank8,global,class=BANK8,space=1,delta=1,lowdata,noexec
+    13                           	psect	udata_bank9,global,class=BANK9,space=1,delta=1,lowdata,noexec
+    14                           	psect	udata_bank10,global,class=BANK10,space=1,delta=1,lowdata,noexec
+    15                           	psect	udata_bank11,global,class=BANK11,space=1,delta=1,lowdata,noexec
+    16                           	psect	udata_bank12,global,class=BANK12,space=1,delta=1,lowdata,noexec
+    17                           	psect	udata_bank13,global,class=BANK13,space=1,delta=1,lowdata,noexec
+    18                           	psect	udata_bank14,global,class=BANK14,space=1,delta=1,lowdata,noexec
+    19                           	psect	udata_bank15,global,class=BANK15,space=1,delta=1,lowdata,noexec
+    20                           	psect	udata,global,class=RAM,space=1,delta=1,noexec
+    21                           	psect	code,global,reloc=2,class=CODE,delta=1
+    22                           	psect	data,global,reloc=2,class=CONST,delta=1,noexec
+    23                           	psect	edata,global,class=EEDATA,space=3,delta=2,noexec
+    24                           	psect	adc_code,global,class=CODE,delta=1
+    25  0000                     
+    26                           	psect	edata
+    27  0000                     stk_offset	set	0
+    28  0000                     auto_size	set	0
+    29                           
+    30                           ; stack_auto defines a symbol /name/_offset which equates to the
+    31                           ; stack offset of the auto object in question
+    32  000000                     
+    33                           ; stack_param defines a symbol /name/_offset which equates to the
+    34                           ; stack offset of the parameter object in question
+    35  000000                     
+    36                           ; alloc_stack adjusts the SP to allocate space for auto objects
+    37                           ; it also links in to the btemp symbol so that can be used
+    38  000000                     
+    39                           ; restore_stack adjusts the SP to remove all auto and parameter
+    40                           ; objects from the stack prior to returning from a function
+    41  000000                     
+    42                           	psect	adc_code
+    43  01FEAE                     ADC_Setup:
+    44                           	callstack 0
+    45  01FEAE  8092               	bsf	3986,0,c	; pin ((PORTA) and 0FFh), 0, a==((PORTA) and 0FFh), 0, a input
+    46  01FEB0  8125               	bsf	37,0,b	; set ((PORTA) and 0FFh), 0, a to analog
+    47  01FEB2  0E01               	movlw	1	; select ((PORTA) and 0FFh), 0, a for measurement
+    48  01FEB4  6EC2               	movwf	4034,c	; and turn ADC on
+    49  01FEB6  0E30               	movlw	48	; Select 4.096V positive reference
+    50  01FEB8  6EC1               	movwf	4033,c	; 0V for -ve reference and -ve input
+    51  01FEBA  0EF6               	movlw	246	; Right justified output
+    52  01FEBC  6EC0               	movwf	4032,c	; Fosc/64 clock and acquisition times
+    53  01FEBE  0012               	return	
+    54  01FEC0                     ADC_Read:
+    55                           	callstack 0
+    56  01FEC0  82C2               	bsf	194,1,c	; Start conversion by setting ((ADCON0) and 0FFh), 1, a bit in ADCON0
+    57  01FEC2                     adc_loop:
+    58  01FEC2  B2C2               	btfsc	194,1,c	; check to see if finished
+    59  01FEC4  D7FE               	bra	adc_loop
+    60  01FEC6  0012               	return	
+    61                           tosu	equ	0xFFF
+    62                           tosh	equ	0xFFE
+    63                           tosl	equ	0xFFD
+    64                           stkptr	equ	0xFFC
+    65                           pclatu	equ	0xFFB
+    66                           pclath	equ	0xFFA
+    67                           pcl	equ	0xFF9
+    68                           tblptru	equ	0xFF8
+    69                           tblptrh	equ	0xFF7
+    70                           tblptrl	equ	0xFF6
+    71                           tablat	equ	0xFF5
+    72                           prodh	equ	0xFF4
+    73                           prodl	equ	0xFF3
+    74                           indf0	equ	0xFEF
+    75                           postinc0	equ	0xFEE
+    76                           postdec0	equ	0xFED
+    77                           preinc0	equ	0xFEC
+    78                           plusw0	equ	0xFEB
+    79                           fsr0h	equ	0xFEA
+    80                           fsr0l	equ	0xFE9
+    81                           wreg	equ	0xFE8
+    82                           indf1	equ	0xFE7
+    83                           postinc1	equ	0xFE6
+    84                           postdec1	equ	0xFE5
+    85                           preinc1	equ	0xFE4
+    86                           plusw1	equ	0xFE3
+    87                           fsr1h	equ	0xFE2
+    88                           fsr1l	equ	0xFE1
+    89                           bsr	equ	0xFE0
+    90                           indf2	equ	0xFDF
+    91                           postinc2	equ	0xFDE
+    92                           postdec2	equ	0xFDD
+    93                           preinc2	equ	0xFDC
+    94                           plusw2	equ	0xFDB
+    95                           fsr2h	equ	0xFDA
+    96                           fsr2l	equ	0xFD9
+    97                           status	equ	0xFD8
+
+
+Microchip Technology PIC18 Macro Assembler V2.31 build 20201012212115 
+Symbol Table                                                                                               Mon Mar  8 10:07:18 2021
+
+                           TRISA 000F92                            ADCON0 000FC2                            ADCON1 000FC1  
+                          ADCON2 000FC0                            ANCON0 000F25                          ADC_Read FEC0  
+                        adc_loop FEC2                         ADC_Setup FEAE                    PORTA_RA0_POSN 000000  

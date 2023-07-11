@@ -1,0 +1,145 @@
+
+
+Microchip MPLAB XC8 Assembler V2.31 build 20201012212115 
+                                                                                                           Tue Mar  9 16:40:01 2021
+
+
+     1                           	processor	18F87K22
+     2                           	pagewidth 132
+     3                           	psect	udata_acs,global,class=COMRAM,space=1,delta=1,lowdata,noexec
+     4                           	psect	udata_bank0,global,class=BANK0,space=1,delta=1,lowdata,noexec
+     5                           	psect	udata_bank1,global,class=BANK1,space=1,delta=1,lowdata,noexec
+     6                           	psect	udata_bank2,global,class=BANK2,space=1,delta=1,lowdata,noexec
+     7                           	psect	udata_bank3,global,class=BANK3,space=1,delta=1,lowdata,noexec
+     8                           	psect	udata_bank4,global,class=BANK4,space=1,delta=1,lowdata,noexec
+     9                           	psect	udata_bank5,global,class=BANK5,space=1,delta=1,lowdata,noexec
+    10                           	psect	udata_bank6,global,class=BANK6,space=1,delta=1,lowdata,noexec
+    11                           	psect	udata_bank7,global,class=BANK7,space=1,delta=1,lowdata,noexec
+    12                           	psect	udata_bank8,global,class=BANK8,space=1,delta=1,lowdata,noexec
+    13                           	psect	udata_bank9,global,class=BANK9,space=1,delta=1,lowdata,noexec
+    14                           	psect	udata_bank10,global,class=BANK10,space=1,delta=1,lowdata,noexec
+    15                           	psect	udata_bank11,global,class=BANK11,space=1,delta=1,lowdata,noexec
+    16                           	psect	udata_bank12,global,class=BANK12,space=1,delta=1,lowdata,noexec
+    17                           	psect	udata_bank13,global,class=BANK13,space=1,delta=1,lowdata,noexec
+    18                           	psect	udata_bank14,global,class=BANK14,space=1,delta=1,lowdata,noexec
+    19                           	psect	udata_bank15,global,class=BANK15,space=1,delta=1,lowdata,noexec
+    20                           	psect	udata,global,class=RAM,space=1,delta=1,noexec
+    21                           	psect	code,global,abs,reloc=2,class=CODE,delta=1
+    22                           	psect	data,global,reloc=2,class=CONST,delta=1,noexec
+    23                           	psect	edata,global,class=EEDATA,space=3,delta=2,noexec
+    24  0000                     
+    25                           	psect	code
+    26  000000                     rst:
+    27  000000                     	org	0
+    28  000000  EF02  F000         	goto	start
+    29  000004                     start:
+    30  000004  010F               	banksel	3923
+    31  000006  8D53               	bsf	83,6,b
+    32  000008  0E00               	movlw	0
+    33  00000A  6E97               	movwf	3991,c
+    34  00000C  6E85               	movwf	3973,c
+    35  00000E  0E00               	movlw	0
+    36  000010  6E99               	movwf	3993,c
+    37  000012  6E87               	movwf	3975,c
+    38  000014  6A8D               	clrf	3981,c
+    39                           
+    40                           ;use 0-3 as input and 4-7 as output
+    41  000016  0E0F               	movlw	15
+    42  000018  6E96               	movwf	3990,c
+    43  00001A  EC1E  F000         	call	checkrow1
+    44  00001E  0000               	nop	
+    45  000020  EC22  F000         	call	checkrow2
+    46  000024  0000               	nop	
+    47  000026  EC26  F000         	call	checkrow3
+    48  00002A  0000               	nop	
+    49  00002C  EC2A  F000         	call	checkrow4
+    50  000030  0000               	nop	
+    51                           
+    52                           ;use 4-7 as input and 0-3 as output
+    53  000032  0EF0               	movlw	240
+    54  000034  6E96               	movwf	3990,c
+    55  000036  EC2E  F000         	call	checkcol1
+    56  00003A  0000               	nop	
+    57  00003C                     checkrow1:
+    58  00003C  B084               	btfsc	3972,0,c
+    59  00003E  0012               	return	
+    60  000040  CF84 FF85          	movff	3972,3973
+    61  000044                     checkrow2:
+    62  000044  B284               	btfsc	3972,1,c
+    63  000046  0012               	return	
+    64  000048  CF84 FF85          	movff	3972,3973
+    65  00004C                     checkrow3:
+    66  00004C  B484               	btfsc	3972,2,c
+    67  00004E  0012               	return	
+    68  000050  CF84 FF85          	movff	3972,3973
+    69  000054                     checkrow4:
+    70  000054  B684               	btfsc	3972,3,c
+    71  000056  0012               	return	
+    72  000058  CF84 FF85          	movff	3972,3973
+    73  00005C                     checkcol1:
+    74  00005C  B884               	btfsc	3972,4,c
+    75  00005E  0012               	return	
+    76  000060  CF84 FF87          	movff	3972,3975
+    77                           
+    78                           	psect	edata
+    79  0000                     stk_offset	set	0
+    80  0000                     auto_size	set	0
+    81                           
+    82                           ; stack_auto defines a symbol /name/_offset which equates to the
+    83                           ; stack offset of the auto object in question
+    84  000000                     
+    85                           ; stack_param defines a symbol /name/_offset which equates to the
+    86                           ; stack offset of the parameter object in question
+    87  000000                     
+    88                           ; alloc_stack adjusts the SP to allocate space for auto objects
+    89                           ; it also links in to the btemp symbol so that can be used
+    90  000000                     
+    91                           ; restore_stack adjusts the SP to remove all auto and parameter
+    92                           ; objects from the stack prior to returning from a function
+    93  000000                     tosu	equ	0xFFF
+    94                           tosh	equ	0xFFE
+    95                           tosl	equ	0xFFD
+    96                           stkptr	equ	0xFFC
+    97                           pclatu	equ	0xFFB
+    98                           pclath	equ	0xFFA
+    99                           pcl	equ	0xFF9
+   100                           tblptru	equ	0xFF8
+   101                           tblptrh	equ	0xFF7
+   102                           tblptrl	equ	0xFF6
+   103                           tablat	equ	0xFF5
+   104                           prodh	equ	0xFF4
+   105                           prodl	equ	0xFF3
+   106                           indf0	equ	0xFEF
+   107                           postinc0	equ	0xFEE
+   108                           postdec0	equ	0xFED
+   109                           preinc0	equ	0xFEC
+   110                           plusw0	equ	0xFEB
+   111                           fsr0h	equ	0xFEA
+   112                           fsr0l	equ	0xFE9
+   113                           wreg	equ	0xFE8
+   114                           indf1	equ	0xFE7
+   115                           postinc1	equ	0xFE6
+   116                           postdec1	equ	0xFE5
+   117                           preinc1	equ	0xFE4
+   118                           plusw1	equ	0xFE3
+   119                           fsr1h	equ	0xFE2
+   120                           fsr1l	equ	0xFE1
+   121                           bsr	equ	0xFE0
+   122                           indf2	equ	0xFDF
+   123                           postinc2	equ	0xFDE
+   124                           postdec2	equ	0xFDD
+   125                           preinc2	equ	0xFDC
+   126                           plusw2	equ	0xFDB
+   127                           fsr2h	equ	0xFDA
+   128                           fsr2l	equ	0xFD9
+   129                           status	equ	0xFD8
+
+
+Microchip Technology PIC18 Macro Assembler V2.31 build 20201012212115 
+Symbol Table                                                                                               Tue Mar  9 16:40:01 2021
+
+                             rst 0000                              LATE 000F8D                             PORTE 000F84  
+                           PORTF 000F85                             PORTH 000F87                             TRISE 000F96  
+                           TRISF 000F97                             TRISH 000F99                             start 0004  
+                         PADCFG1 000F53                         checkcol1 005C                         checkrow1 003C  
+                       checkrow2 0044                         checkrow3 004C                         checkrow4 0054  
